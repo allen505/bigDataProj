@@ -23,7 +23,7 @@ services:
     networks:
       - kafka-net
   mongodb:
-    image: "mongo"
+    image: mongo:latest
     container_name: mongo
     ports:
       - "27017:27017"
