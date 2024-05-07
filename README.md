@@ -33,6 +33,7 @@ pip install jupyter
 pip install pandas
 pip install numpy
 pip install pymongo
+pip install py7zr
 ```
 
 Use `jupyter notebook` command in bigdata env in the terminal and run all cell of `mongosetup.ipynb`

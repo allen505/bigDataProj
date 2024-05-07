@@ -9,3 +9,5 @@ pip install pandas
 pip install numpy
 
 pip install pymongo
+
+pip install py7zr
