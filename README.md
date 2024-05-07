@@ -22,4 +22,22 @@ Run `docker exec -it mongo bash` to interact with mongo on terminal
 
 To access mongoshell use `mongosh`
 
+### Setting up data
+
+>First run commands in `temp.sh` or run the given commands in the terminal
+
+```bash
+conda create -n bigdata python==3.10
+conda activate bigdata
+pip install jupyter
+pip install pandas
+pip install numpy
+pip install pymongo
+```
+
+Use `jupyter notebook` command in bigdata env in the terminal and run all cell of `mongosetup.ipynb`
+
+**NOTE**: Run all the cell only ONCE
+
+You have to run `mongosetup.ipynb` every time you use `docker compose up -d`
 
