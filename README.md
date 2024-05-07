@@ -39,5 +39,5 @@ Use `jupyter notebook` command in bigdata env in the terminal and run all cell o
 
 **NOTE**: Run all the cell only ONCE
 
-You have to run `mongosetup.ipynb` every time you use `docker compose up -d`
+Make sure that you use `docker compose stop` rather than `docker compose down`
 
