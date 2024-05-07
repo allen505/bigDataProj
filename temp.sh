@@ -1,7 +1,7 @@
-#!/bin/zsh
+#!/bin/bash
 
 conda create -n bigdata python==3.10
-source /Users/allenabraham/miniconda3/bin/activate bigdata
+source activate bigdata
 echo "Activated Conda env $CONDA_PREFIX"
 
 pip install jupyter
