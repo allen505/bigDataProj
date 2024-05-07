@@ -7,8 +7,10 @@
 # %%
 import py7zr
 
-with py7zr.SevenZipFile('Dataset/US_youtube_trending_data.7z.', mode='r') as z:
+with py7zr.SevenZipFile('Dataset/US_youtube_trending_data.7z', mode='r') as z:
     z.extractall()
+
+print("Extracted data")
 
 # %% [markdown]
 # #### Importing dependencies
@@ -32,6 +34,7 @@ import pprint
 # %%
 client = MongoClient(host='localhost',port=27017)
 
+print("Connected to MongoDB")
 # %%
 client.list_database_names()
 
