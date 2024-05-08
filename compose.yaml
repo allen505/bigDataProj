@@ -39,6 +39,8 @@ services:
   spark:
     image: allennyu/sparky
     container_name: spark
+    volumes:
+      - .:/workArea
     ports:
       - "3888:8888"
     networks:
