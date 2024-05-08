@@ -36,6 +36,14 @@ services:
       - "27017:27017"
     networks:
       - kafka-net
+  spark:
+    image: allennyu/sparky
+    container_name: spark
+    ports:
+      - "3888:8888"
+    networks:
+      - kafka-net
+
 #  kcat:
 #    image: edenhill/kcat:1.7.1
 #    container_name: kcat
