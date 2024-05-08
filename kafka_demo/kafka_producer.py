@@ -1,4 +1,3 @@
-from time import sleep
 import json
 from kafka import KafkaProducer
 from kafka.errors import KafkaError
@@ -19,19 +18,14 @@ producer = KafkaProducer(
 
 print('Connected to Kafka')
 
-# future = producer.send(TOPIC_NAME, b'testVal', b'testKey')
-
-# print('Sent the value')
-
-# record_metadata = None
-# # Block for 'synchronous' sends
-# try:
-#     record_metadata = future.get(timeout=10)
-# except KafkaError as e:
-#     # Decide what to do if produce request failed...
-#     print('Kafka error: ', e)
-
 for e in range(10):
     data = {'number': e}
     print('Sending {} to Kafka'.format(e))
-    producer.send(TOPIC_NAME, value=data)
+    future = producer.send(TOPIC_NAME, value=data)
+    
+    r_meta = None
+    try:
+        r_meta = future.get(timeout=10)
+    except KafkaError as e:
+        print('Kafka error: ', e)
+    
