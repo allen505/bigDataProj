@@ -81,13 +81,18 @@
         console.log("vid_list exists:", data['vid_list']);
         $('.recommendation').append('<div class="text">Popular Videos</div>');
         for (let id of data['vid_list']) {
-          $(".recommendation").append(`<div class='labels' tag='${id}'>${id}</div>`);
+          $(".recommendation").append(`<button class='video-button' data-id='${id}'>${id}</button>`);
         }
+        $('.video-button').click(function() {
+          var videoId = $(this).attr('data-id');
+          window.location.href = `/play_video/${videoId}`;
+        });
       } else {
         console.log("vid_list does not exist or is undefined");
       }
     }
   });
+
 </script>
 
 
