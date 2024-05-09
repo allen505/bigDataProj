@@ -4,7 +4,7 @@ from flask import request,jsonify
 client = pymongo.MongoClient('mongodb://127.0.0.1:27017/')
 userdb = client['bigdata']
 users = userdb.users
-api_key="AIzaSyBLCjxOSiwtMrb_wf5I7eV-szM3Gd4Uv9g"
+
 
 def insert_data():
 	if request.method == 'POST':
