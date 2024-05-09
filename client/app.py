@@ -15,24 +15,28 @@ def check_liked_lables():
     try:
         if request.method == 'POST':
             email=session.get('email')
-            fields='liked_labels'
-            user={
-                'email':email,
-                fields:{"$exists":True}
-            }
-            user_data=users.find_one(user)
-            if user_data==None:
-                recommended_list = videos.distinct("video_id")[:5]
-                # recommended_list=videos.find({}).sort({"view_count":-1}).limit(5)
-                # filtered_list=[{key: obj[key] for key in ['video_id', 'title']} for obj in recommended_list]
-
-                data={
-                    'status':False,
-                    'vid_list':recommended_list
+            fields = 'liked_labels'
+            user = {
+                    'email': email,
+                    fields: {"$exists": True}
                 }
-                return data
+            user_data = users.find_one(user)
+            if user_data is None:
+                    recommended_list = videos.aggregate([
+                        {"$sortByCount": "$video_id"},
+                        {"$sort": {"count": -1}},
+                        {"$limit": 5}
+                    ])
+                    vid_list = [doc["_id"] for doc in recommended_list]
+
+                    data = {
+                        'status': False,
+                        'vid_list': vid_list
+                    }
+                    return data
             else:
                 pass
+
     except Exception as e:
         print(e)
 
@@ -87,11 +91,12 @@ def get_recommendation():
     data=check_liked_lables()
     print("DATA:",data)
     return json.dumps(data)
+    # return render_template('content.html', data=data)
 
+@app.route('/play_video')
+def play_video():
+    return render_template('play_video.html')
 
-@app.route('/play_video/<videoId>')
-def play_video(videoId):
-    return render_template('play_video.html', videoId=videoId)
 
 if __name__ == '__main__':
     app.run(debug = True)
