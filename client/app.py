@@ -38,14 +38,20 @@ def check_liked_lables():
             
             if user_data is None:
                     recommended_list = trending_videos.find({}, {'video_id': 1})
-                    # recommended_list = videos.aggregate([
-                    #     {"$sortByCount": "$video_id"},
-                    #     {"$sort": {"count": -1}},
-                    #     {"$limit": 5}
-                    # ])
-                    # vid_list = [doc["_id"] for doc in recommended_list]
-                    
-                    vid_list = [doc["video_id"] for doc in recommended_list]
+                    counts=0
+                    for vid in recommended_list:
+                        counts =counts+1
+
+                    print("COUNT: ", counts)
+                    if counts <1:
+                        recommended_list = videos.aggregate([
+                            {"$sortByCount": "$video_id"},
+                            {"$sort": {"count": -1}},
+                            {"$limit": 5}
+                        ])
+                        vid_list = [doc["_id"] for doc in recommended_list]
+                    else:
+                        vid_list = [doc["video_id"] for doc in recommended_list]
                     # Fetch video names from the MongoDB videos collection
                     video_names = []
                     for vid_id in vid_list:
