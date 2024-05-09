@@ -64,36 +64,32 @@
     test text
   </div>
   <script src="{{ url_for('static', filename= 'vendor/jquery/jquery.min.js') }}"></script>
-  <script src="{{ url_for('static', filename= 'js/index.js') }}"></script>
-  <script script type="text/javascript">
-    $.ajax({
-      type:'POST',
-      url: '/generate_list',
-      processData: false,
-      cache: false,
-      timeout: 800000,
-      contentType: false,
-      data:"",
-      success: function(response) {
-          var data = JSON.parse(response);
-          if (data['status'] == true){
-            console.log("Got the data")
-              $('.recommendation').append('<div class="text">Popular Videos</div>')
-              console.log(data['vid_list'])
-              for(let i=0;i<data['vid_list'].length;i++){
-                $(".recommendation").append(`<div class='labels' tag='${data['vid_list'][i]["video_id"]}'> ${data['vid_list'][i]['title']}`)
-              }
-            
-          } 
-          // else{
-          //     $(".error_message").text("Incorrect Email and Password.");
-          //     $(".error_message").show(0).delay(3000).hide(0);
-          //     window.location="/home"
-          // }
-      } 
-              
-    });
-  </script>
+<script src="{{ url_for('static', filename= 'js/index.js') }}"></script>
+<script type="text/javascript">
+  $.ajax({
+    type: 'POST',
+    url: '/generate_list',
+    processData: false,
+    cache: false,
+    timeout: 800000,
+    contentType: false,
+    data: "",
+    success: function(response) {
+      var data = JSON.parse(response);
+      console.log("Got the data", data);
+      if (data['vid_list']) {
+        console.log("vid_list exists:", data['vid_list']);
+        $('.recommendation').append('<div class="text">Popular Videos</div>');
+        for (let id of data['vid_list']) {
+          $(".recommendation").append(`<div class='labels' tag='${id}'>${id}</div>`);
+        }
+      } else {
+        console.log("vid_list does not exist or is undefined");
+      }
+    }
+  });
+</script>
+
 
 </body>
 

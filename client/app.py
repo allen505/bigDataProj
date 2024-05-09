@@ -1,6 +1,8 @@
 import db
 import json
 from flask import Flask, request, render_template, session, redirect, url_for, jsonify
+from flask import jsonify
+
 
 app = Flask(__name__)
 app.secret_key = 'your_very_secure_secret_key'  # You should generate a secure key
@@ -20,12 +22,13 @@ def check_liked_lables():
             }
             user_data=users.find_one(user)
             if user_data==None:
-                recommended_list=videos.find({}).sort({"view_count":-1}).limit(5)
-                filtered_list=[{key: obj[key] for key in ['video_id', 'title']} for obj in recommended_list]
+                recommended_list = videos.distinct("video_id")[:5]
+                # recommended_list=videos.find({}).sort({"view_count":-1}).limit(5)
+                # filtered_list=[{key: obj[key] for key in ['video_id', 'title']} for obj in recommended_list]
 
                 data={
                     'status':False,
-                    'vid_list':filtered_list
+                    'vid_list':recommended_list
                 }
                 return data
             else:
@@ -82,8 +85,14 @@ def display():
 @app.route('/generate_list',methods=['GET','POST'])
 def get_recommendation():
     data=check_liked_lables()
-    print(data)
-    return json.dumps({})
+    print("DATA:",data)
+    return jsonify(data)
+    # return render_template('content.html', data=data)
+
+@app.route('/play_video')
+def play_video():
+    return render_template('play_video.html')
+
 
 if __name__ == '__main__':
     app.run(debug = True)
