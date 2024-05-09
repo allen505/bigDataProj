@@ -188,7 +188,7 @@ def update_time():
     user_email = session.get('email')
     curTime=datetime.datetime.now()
     if user_email and video_id:
-        push_data = {'timestamp': curTime, 'video_id': video_id, 'email': user_email}
+        push_data = {'timestamp': str(curTime), 'video_id': video_id, 'email': user_email}
         print('Sending {} to Kafka'.format(push_data))
         future = kafkaProducer.send(VID_OPEN_TOPIC, value=push_data)
         
