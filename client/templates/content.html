@@ -97,15 +97,27 @@
         for (let id of data['vid_list']) {
           $(".recommendation").append(`<button class='video-button videos-btn' data-id='${id}'>${id}</button>`);
         }
-        $('.video-button').click(function() {
-          var videoId = $(this).attr('data-id');
-          window.location.href = `/play_video/${videoId}`;
-        });
+        $('.video-button').click(markVidOpen)
       } else {
         console.log("vid_list does not exist or is undefined");
       }
     }
   });
+
+  function markVidOpen(){
+    let videoId = $(this).attr('data-id');
+    console.log("markVidOpen for id = ", videoId);
+
+    $.ajax({
+    type: 'POST',
+    url: '/ana/mark_opened',
+    cache: false,
+    timeout: 800000,
+    contentType: "application/json",
+    data: JSON.stringify({'video_id': videoId}),
+    });
+    window.location.href = `/play_video/${videoId}`;
+  }
 
 </script>
 
