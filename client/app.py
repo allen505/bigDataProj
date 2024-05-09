@@ -97,6 +97,31 @@ def get_recommendation():
 def play_video(videoId):
     return render_template('play_video.html',videoId=videoId)
 
+# Route to handle liking or disliking a video
+@app.route('/like_video/<video_id>', methods=['POST'])
+def like_video(video_id):
+    action = request.json.get('action')
+    user_email = session.get('email')
+
+    # Check if user exists
+    user_exists = users.find_one({'email': user_email})
+    print("ACTION:",action)
+    print("email:",user_email)
+    if not user_exists:
+        print(3)
+        return jsonify({'error': 'User not found'})
+
+    if action == 'like':
+        print("ADDING")
+        # Update user's liked videos array with video_id
+        users.update_one({'email': user_email}, {'$addToSet': {'liked_videos': video_id}})
+        return jsonify({'message': 'Video liked'})
+    elif action == 'dislike':
+        # Update user's disliked videos array with video_id
+        users.update_one({'email': user_email}, {'$addToSet': {'disliked_videos': video_id}})
+        return jsonify({'message': 'Video disliked'})
+    else:
+        return jsonify({'error': 'Invalid action'})
 
 if __name__ == '__main__':
     app.run(debug = True)
