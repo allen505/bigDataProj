@@ -14,7 +14,7 @@ Just run `docker compose up -d` in the project's root folder
 `kafka-console-producer.sh --producer.config /opt/bitnami/kafka/config/producer.properties --bootstrap-server kafka:9092 --topic vidRecommender`
 
 
-`kafka-console-consumer.sh --consumer.config /opt/bitnami/kafka/config/consumer.properties --bootstrap-server kafka:9092 --topic vidRecommender --from-beginning`
+`kafka-console-consumer.sh --consumer.config /opt/bitnami/kafka/config/consumer.properties --bootstrap-server kafka:9092 --from-beginning --topic vidRecommender`
 
 ## Mongodb
 
