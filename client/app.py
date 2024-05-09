@@ -45,8 +45,11 @@ def check_liked_lables():
                     print("COUNT: ", counts)
                     if counts <1:
                         recommended_list = videos.aggregate([
-                            {"$sortByCount": "$video_id"},
-                            {"$sort": {"count": -1}},
+                            {"$group": {
+                                "_id": "$video_id",
+                                "total_views": {"$sum": "$view_count"}
+                            }},
+                            {"$sort": {"total_views": -1}},
                             {"$limit": 5}
                         ])
                         vid_list = [doc["_id"] for doc in recommended_list]
