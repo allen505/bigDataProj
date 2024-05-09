@@ -55,6 +55,15 @@ def check_liked_lables():
                         vid_list = [doc["_id"] for doc in recommended_list]
                     else:
                         vid_list = [doc["video_id"] for doc in recommended_list]
+                    # recommended_list = trending_videos.find({}, {'video_id': 1})
+                    recommended_list = videos.aggregate([
+                        {"$sortByCount": "$video_id"},
+                        {"$sort": {"count": -1}},
+                        {"$limit": 5}
+                    ])
+                    vid_list = [doc["_id"] for doc in recommended_list]
+                    
+                    # vid_list = [doc["video_id"] for doc in recommended_list]
                     # Fetch video names from the MongoDB videos collection
                     video_names = []
                     for vid_id in vid_list:
@@ -173,11 +182,24 @@ def like_video(video_id):
 def update_time():
     data = request.get_json()
     print(data)
-    video_id = data['video_id']
+    video_id=data['video_id']
     current_time = data['current_time']
-    total_time= data['total_time']
+    VID_OPEN_TOPIC = 'VID_SKIP_TIME_TOPIC'
+    user_email = session.get('email')
+    curTime=datetime.datetime.now()
+    if user_email and video_id:
+        push_data = {'timestamp': curTime, 'video_id': video_id, 'email': user_email}
+        print('Sending {} to Kafka'.format(push_data))
+        future = kafkaProducer.send(VID_OPEN_TOPIC, value=push_data)
+        
+        r_meta = None
+        try:
+            r_meta = future.get(timeout=10)
+        except KafkaError as e:
+            print('Kafka error when pushing to topic {}: {}'.format(VID_OPEN_TOPIC, e))
+    
+    return get200_resp()
 
-    interval_value=total_time / 10
     
 
     # Increment the collection in MongoDB for the given video ID and current time frame

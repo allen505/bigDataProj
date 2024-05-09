@@ -23,25 +23,23 @@ function onYouTubePlayerAPIReady() {
 
 function onPlayerStateChange(events){
     if (events.data == YT.PlayerState.PLAYING) {
-        setInterval(sendCurrentTime, 20000); // Send current time every 10 seconds
-    }
-}
-
-function sendCurrentTime() {
-    var currentTime = Math.round(player.playerInfo.currentTime);
-    if (currentTime !== lastSentTime) {
-        lastSentTime = currentTime;
-        // Send current time to Flask backend
+        var currentTime = Math.round(player.playerInfo.currentTime);
+        console.log(currentTime)
         fetch('/update_time', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ video_id: id, current_time: currentTime })
+            body: JSON.stringify({ 'video_id': id, 'current_time': currentTime })
         }).then(response => {
             console.log('Current time sent successfully:', currentTime);
         }).catch(error => {
             console.error('Error sending current time:', error);
         });
+    
     }
+}
+
+function sendCurrentTime() {
+    
 }
