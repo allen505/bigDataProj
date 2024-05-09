@@ -2,6 +2,8 @@ import db
 import json
 from flask import Flask, request, render_template, session, redirect, url_for, jsonify
 from flask import jsonify
+from googleapiclient.discovery import build
+import isodate
 
 
 app = Flask(__name__)
@@ -95,6 +97,8 @@ def get_recommendation():
 
 @app.route('/play_video/<videoId>')
 def play_video(videoId):
+    length_seconds = get_video_length(videoId)
+    print("LENGTH:",length_seconds)
     return render_template('play_video.html',videoId=videoId)
 
 # Route to handle liking or disliking a video
@@ -122,6 +126,41 @@ def like_video(video_id):
         return jsonify({'message': 'Video disliked'})
     else:
         return jsonify({'error': 'Invalid action'})
+
+# @app.route('/update_time', methods=['POST'])
+# def update_time():
+#     data = request.json
+#     video_id = data['video_id']
+#     current_time = data['current_time']
+    
+#     # Increment the collection in MongoDB for the given video ID and current time frame
+#     # Implement your MongoDB logic here
+    
+#     return jsonify({'message': 'Current time updated successfully'})
+
+
+
+
+# Set up the YouTube Data API client
+youtube_api_key = 'AIzaSyDlUdNx5_dApzybPBoZhh1HATk-WNP1j5Y'
+youtube = build('youtube', 'v3', developerKey=youtube_api_key)
+
+import isodate
+
+def get_video_length(video_id):
+    # Call the YouTube Data API to retrieve video details
+    request = youtube.videos().list(
+        part='contentDetails',
+        id=video_id
+    )
+    response = request.execute()
+    # Extract the duration from the response
+    duration_str = response['items'][0]['contentDetails']['duration']
+    # Parse the ISO 8601 duration format to get the length in seconds
+    duration = isodate.parse_duration(duration_str)
+    length_seconds = duration.total_seconds()
+    return length_seconds
+
 
 if __name__ == '__main__':
     app.run(debug = True)

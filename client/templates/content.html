@@ -7,6 +7,20 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Home page</title>
   <style>
+    .videos-btn {
+        background-color: blue;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .like-btn:hover, .dislike-btn:hover {
+        background-color: darkblue;
+    }
     .top-left {
       position: static;
       top: 10px;
@@ -81,7 +95,7 @@
         console.log("vid_list exists:", data['vid_list']);
         $('.recommendation').append('<div class="text">Popular Videos</div>');
         for (let id of data['vid_list']) {
-          $(".recommendation").append(`<button class='video-button' data-id='${id}'>${id}</button>`);
+          $(".recommendation").append(`<button class='video-button videos-btn' data-id='${id}'>${id}</button>`);
         }
         $('.video-button').click(function() {
           var videoId = $(this).attr('data-id');
