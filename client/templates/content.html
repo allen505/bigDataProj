@@ -94,9 +94,14 @@
       if (data['vid_list']) {
         console.log("vid_list exists:", data['vid_list']);
         $('.recommendation').append('<div class="text">Popular Videos</div>');
-        for (let id of data['vid_list']) {
-          $(".recommendation").append(`<button class='video-button videos-btn' data-id='${id}'>${id}</button>`);
+        for (let i = 0; i < data['vid_list'].length; i++) {
+          let id = data['vid_list'][i];
+          let name = data['vid_name'][i];
+          $(".recommendation").append(`<button class='video-button videos-btn' data-id='${id}'>${name} (${id})</button></br>`);
+          $(".recommendation").append(`<div style='margin-bottom: 10px;'></div>`); // Add space between buttons
+
         }
+
         $('.video-button').click(markVidOpen)
       } else {
         console.log("vid_list does not exist or is undefined");

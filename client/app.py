@@ -15,6 +15,7 @@ app = Flask(__name__)
 app.secret_key = 'your_very_secure_secret_key'  # You should generate a secure key
 
 users=db.users
+trending_videos=db.userdb.trending_videos
 videos=db.userdb.videos
 
 KAFKA_ENDPOINT = 'localhost:9093'
@@ -34,17 +35,31 @@ def check_liked_lables():
                     fields: {"$exists": True}
                 }
             user_data = users.find_one(user)
+            
             if user_data is None:
-                    recommended_list = videos.aggregate([
-                        {"$sortByCount": "$video_id"},
-                        {"$sort": {"count": -1}},
-                        {"$limit": 5}
-                    ])
-                    vid_list = [doc["_id"] for doc in recommended_list]
+                    recommended_list = trending_videos.find({}, {'video_id': 1})
+                    # recommended_list = videos.aggregate([
+                    #     {"$sortByCount": "$video_id"},
+                    #     {"$sort": {"count": -1}},
+                    #     {"$limit": 5}
+                    # ])
+                    # vid_list = [doc["_id"] for doc in recommended_list]
+                    
+                    vid_list = [doc["video_id"] for doc in recommended_list]
+                    # Fetch video names from the MongoDB videos collection
+                    video_names = []
+                    for vid_id in vid_list:
+                        video_doc = videos.find_one({"video_id": vid_id})
+                        if video_doc:
+                            video_names.append(video_doc["title"])
+                        else:
+                            video_names.append("Unknown")  # Handle if video not found in the database
 
+                    # Construct the response data
                     data = {
                         'status': False,
-                        'vid_list': vid_list
+                        'vid_list': vid_list,
+                        'vid_name': video_names
                     }
                     return data
             else:
