@@ -67,8 +67,8 @@ videos=db["videos"]
 
 # %%
 print("Loading csv")
-videos_data_dict=pd.read_csv("US_youtube_trending_data.csv").to_dict(orient="records")
-videos.groupby("")
+videos_data_dict=pd.read_csv("US_youtube_trending_data.csv")
+videos_data_dict.groupby("")
 print(len(videos_data_dict))
 
 # %%
