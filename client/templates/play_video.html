@@ -65,7 +65,7 @@
         <button class="like-btn" onclick="likeVideo('{{ videoId }}')"><i class="fas fa-thumbs-up"></i>Like</button>
         <button class="dislike-btn" onclick="dislikeVideo('{{ videoId }}')"><i class="fas fa-thumbs-down"></i>Dislike</button>
         {% if famous_segment %}
-        <button class="dislike-btn" onclick="startVideoAt30Seconds('{{ videoId }}', '{{ famous_segment }}')">skip to most watched</button>
+        <button class="dislike-btn" onclick="startVideoAt30Seconds('{{ videoId }}', '{{ famous_segment }}')"><i class="fas fa-forward"></i>Skip to most watched</button>
     {% endif %}
     </div>
 
