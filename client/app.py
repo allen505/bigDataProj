@@ -180,24 +180,37 @@ def like_video(video_id):
 
 @app.route('/update_time', methods=['POST'])
 def update_time():
-    data = request.get_json()
-    print(data)
-    video_id=data['video_id']
-    current_time = data['current_time']
-    VID_OPEN_TOPIC = 'VID_SKIP_TIME_TOPIC'
+    VID_SKIP_TIME_TOPIC = 'VID_SKIP_TIME_TOPIC'
+    
     user_email = session.get('email')
+    data = request.get_json()
+    video_id = data['video_id']
+    current_time = data['current_time']
+    total_time = data['total_time']
+    
+    interval_value = total_time / 10
+    interval_number = current_time // interval_value
+    
+    if current_time == total_time:
+        interval_number = 9
+    
+    low_time = interval_number * interval_value
+    high_time = low_time + interval_value
+    
     curTime=datetime.datetime.now()
+    
     if user_email and video_id:
-        push_data = {'timestamp': str(curTime), 'video_id': video_id, 'email': user_email,'current_time':current_time}
+        push_data = {'timestamp': str(curTime), 'video_id': video_id, 'email': user_email, 'current_time':current_time, 'low_time':low_time, 'high_time': high_time}
         print('Sending {} to Kafka'.format(push_data))
-        future = kafkaProducer.send(VID_OPEN_TOPIC, value=push_data)
+        future = kafkaProducer.send(VID_SKIP_TIME_TOPIC, value=push_data)
         
         r_meta = None
         try:
             r_meta = future.get(timeout=10)
         except KafkaError as e:
-            print('Kafka error when pushing to topic {}: {}'.format(VID_OPEN_TOPIC, e))
-    
+            print('Kafka error when pushing to topic {}: {}'.format(VID_SKIP_TIME_TOPIC, e))
+    else:
+        print('No user or video data')
     return get200_resp()
 
     

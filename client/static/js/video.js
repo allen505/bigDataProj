@@ -24,22 +24,24 @@ function onYouTubePlayerAPIReady() {
 function onPlayerStateChange(events){
     if (events.data == YT.PlayerState.PLAYING) {
         var currentTime = Math.round(player.playerInfo.currentTime);
+        var total_time = Math.round(player.getDuration());
+        console.log("Total time = ", total_time)
         console.log(currentTime)
         fetch('/update_time', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ 'video_id': id, 'current_time': currentTime })
+            body: JSON.stringify({ 'video_id': id, 'current_time': currentTime, 'total_time': total_time })
         }).then(response => {
             console.log('Current time sent successfully:', currentTime);
         }).catch(error => {
             console.error('Error sending current time:', error);
         });
-    
+
     }
 }
 
 function sendCurrentTime() {
-    
+
 }
