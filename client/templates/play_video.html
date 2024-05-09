@@ -39,6 +39,9 @@
     </br>
     <button class="like-btn" onclick="likeVideo('{{ videoId }}')">Like</button>
     <button class="dislike-btn" onclick="dislikeVideo('{{ videoId }}')">Dislike</button>
+    {% if famous_segment %}
+    <button class="dislike-btn" onclick="startVideoAt30Seconds('{{ videoId }}', '{{ famous_segment }}')">skip to most watched</button>
+    {% endif %}
 
     <script src="{{ url_for('static', filename= 'js/video.js') }}"></script>
     <script type="text/javascript">
