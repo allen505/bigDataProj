@@ -3,8 +3,10 @@ import json
 from flask import Flask, request, render_template, session, redirect, url_for, jsonify
 from flask import jsonify
 from googleapiclient.discovery import build
+from kafka import KafkaProducer
+from kafka.errors import KafkaError
 import isodate
-
+import time
 
 app = Flask(__name__)
 app.secret_key = 'your_very_secure_secret_key'  # You should generate a secure key
@@ -12,6 +14,12 @@ app.secret_key = 'your_very_secure_secret_key'  # You should generate a secure k
 users=db.users
 videos=db.userdb.videos
 
+KAFKA_ENDPOINT = 'localhost:9093'
+
+kafkaProducer = KafkaProducer(
+    bootstrap_servers=[KAFKA_ENDPOINT],
+    value_serializer=lambda v: json.dumps(v).encode('utf-8')
+    )
 		
 def check_liked_lables():
     try:
@@ -84,7 +92,7 @@ def register():
 def display():
     username = session.get('username')
     email = session.get('email')
-    return render_template("content.html",username=username)    
+    return render_template("content.html",username=username)
     # else:
     #     return redirect(url_for('home'))  # Redirect to login if no user is logged in
 
@@ -132,10 +140,10 @@ def like_video(video_id):
 #     data = request.json
 #     video_id = data['video_id']
 #     current_time = data['current_time']
-    
+
 #     # Increment the collection in MongoDB for the given video ID and current time frame
 #     # Implement your MongoDB logic here
-    
+
 #     return jsonify({'message': 'Current time updated successfully'})
 
 
@@ -144,8 +152,6 @@ def like_video(video_id):
 # Set up the YouTube Data API client
 youtube_api_key = 'AIzaSyDlUdNx5_dApzybPBoZhh1HATk-WNP1j5Y'
 youtube = build('youtube', 'v3', developerKey=youtube_api_key)
-
-import isodate
 
 def get_video_length(video_id):
     # Call the YouTube Data API to retrieve video details
@@ -161,6 +167,34 @@ def get_video_length(video_id):
     length_seconds = duration.total_seconds()
     return length_seconds
 
+
+# ------------------------------------------------------------
+# Analytics APIs
+# ------------------------------------------------------------
+
+@app.route('/ana/mark_opened', methods = ['POST'])
+def mark_opened():
+    # print("Received /ana/mark_opened")
+    VID_OPEN_TOPIC = 'VID_OPEN_TOPIC'
+    user_email = session.get('email')
+    req_data = request.get_json()
+    video_id = req_data['video_id']
+    if user_email and video_id:
+        curTime = time.time()
+        push_data = {'timestamp': curTime, 'video_id': video_id, 'email': user_email}
+        print('Sending {} to Kafka'.format(push_data))
+        future = kafkaProducer.send(VID_OPEN_TOPIC, value=push_data)
+        
+        r_meta = None
+        try:
+            r_meta = future.get(timeout=10)
+        except KafkaError as e:
+            print('Kafka error when pushing to topic {}: {}'.format(VID_OPEN_TOPIC, e))
+    
+    return get200_resp()
+
+def get200_resp():
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
 if __name__ == '__main__':
     app.run(debug = True)
