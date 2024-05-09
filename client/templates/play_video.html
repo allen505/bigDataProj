@@ -58,16 +58,21 @@
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
 </head>
 <body>
-    <h1 id="{{videoId}}">Embedded YouTube Video</h1>
+    <h1 id={{videoId}}>Embedded YouTube Video</h1>
+    <!-- Replace 'VIDEO_ID' with the actual ID of the YouTube video you want to embed -->
     <div id="video-frame"></div>
     <div style="padding-left: 20px;">
         <button class="like-btn" onclick="likeVideo('{{ videoId }}')"><i class="fas fa-thumbs-up"></i>Like</button>
         <button class="dislike-btn" onclick="dislikeVideo('{{ videoId }}')"><i class="fas fa-thumbs-down"></i>Dislike</button>
+        {% if famous_segment %}
+        <button class="dislike-btn" onclick="startVideoAt30Seconds('{{ videoId }}', '{{ famous_segment }}')">skip to most watched</button>
+    {% endif %}
     </div>
 
     <script src="{{ url_for('static', filename= 'js/video.js') }}"></script>
     <script type="text/javascript">
         function likeVideo(videoId) {
+            // Call Flask route to handle liking video
             fetch(`/like_video/${videoId}`, {
                 method: 'POST',
                 headers: {

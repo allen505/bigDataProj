@@ -4,6 +4,7 @@ var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 var video=document.getElementsByTagName('h1')[0];
 id=video.id
+
 var lastSentTime = 0;
 function onYouTubePlayerAPIReady() {
     player = new YT.Player('video-frame', {
@@ -23,25 +24,33 @@ function onYouTubePlayerAPIReady() {
 
 function onPlayerStateChange(events){
     if (events.data == YT.PlayerState.PLAYING) {
-        var currentTime = Math.round(player.playerInfo.currentTime);
-        var total_time = Math.round(player.getDuration());
-        console.log("Total time = ", total_time)
-        console.log(currentTime)
+        setInterval(sendCurrentTime, 20000); // Send current time every 10 seconds
+    }
+}
+
+function sendCurrentTime() {
+    var currentTime = Math.round(player.playerInfo.currentTime);
+    if (currentTime !== lastSentTime) {
+        lastSentTime = currentTime;
+        // Send current time to Flask backend
         fetch('/update_time', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ 'video_id': id, 'current_time': currentTime, 'total_time': total_time })
+            body: JSON.stringify({ video_id: id, current_time: currentTime })
         }).then(response => {
             console.log('Current time sent successfully:', currentTime);
         }).catch(error => {
             console.error('Error sending current time:', error);
         });
-
     }
 }
-
-function sendCurrentTime() {
-
+function startVideoAt30Seconds(videoId,famous_segment) {
+    var startSeconds = parseInt(famous_segment);
+    player.loadVideoById({
+        'videoId': videoId,
+        'startSeconds': startSeconds
+        
+    });
 }
