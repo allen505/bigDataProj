@@ -218,7 +218,7 @@ def mark_opened():
     users.update_one({'email': user_email}, {'$addToSet': {'watched_history': {'current_time': curTime, 'video_id':video_id}}})
 
     if user_email and video_id:
-        push_data = {'timestamp': curTime, 'video_id': video_id, 'email': user_email}
+        push_data = {'timestamp': str(curTime), 'video_id': video_id, 'email': user_email}
         print('Sending {} to Kafka'.format(push_data))
         future = kafkaProducer.send(VID_OPEN_TOPIC, value=push_data)
         
