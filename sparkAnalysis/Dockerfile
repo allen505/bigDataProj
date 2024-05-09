@@ -8,6 +8,7 @@ RUN pip install --upgrade pip
 
 COPY  requirements.txt .
 RUN pip3 install -r requirements.txt
-RUN pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1
+# RUN pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1
+ENV PYSPARK_SUBMIT_ARGS="--master local[2] pyspark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1"
 
 CMD jupyter-lab --allow-root --no-browser --ip=0.0.0.0
