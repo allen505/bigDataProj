@@ -23,11 +23,20 @@
     <meta http-equiv="Permissions-Policy" content="...">
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
 
+    <style>
+        #video-frame {
+            max-width: 1236px; /* Maximum width */
+            max-height: 695px; /* Maximum height */ /* Responsive width */ /* Maintain aspect ratio */
+            border-radius: 20px; /* Rounded corners */
+            overflow: hidden; /* Ensures no content leaks outside the rounded corners */
+        }
+    </style>    
 </head>
 <body>
     <h1 id={{videoId}}>Embedded YouTube Video</h1>
     <!-- Replace 'VIDEO_ID' with the actual ID of the YouTube video you want to embed -->
     <div id="video-frame"></div>
+    </br>
     <button class="like-btn" onclick="likeVideo('{{ videoId }}')">Like</button>
     <button class="dislike-btn" onclick="dislikeVideo('{{ videoId }}')">Dislike</button>
 

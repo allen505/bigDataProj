@@ -6,8 +6,8 @@ var video=document.getElementsByTagName('h1')[0];
 id=video.id
 function onYouTubePlayerAPIReady() {
     player = new YT.Player('video-frame', {
-    height: '200',
-    width: '400',
+    width: '1239px',
+    height:'695px',
     videoId: id,
     playerVars: {
         'autoplay': 0, // This is optional, 1 for autoplay when the video loads
