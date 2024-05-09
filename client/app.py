@@ -1,13 +1,47 @@
 import db
 import json
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, session, redirect, url_for, jsonify
 
 app = Flask(__name__)
+app.secret_key = 'your_very_secure_secret_key'  # You should generate a secure key
+
+users=db.users
+videos=db.userdb.videos
+
+		
+def check_liked_lables():
+    try:
+        if request.method == 'POST':
+            email=session.get('email')
+            fields='liked_labels'
+            user={
+                'email':email,
+                fields:{"$exists":True}
+            }
+            user_data=users.find_one(user)
+            if user_data==None:
+                recommended_list=videos.find({}).sort({"view_count":-1}).limit(5)
+                filtered_list=[{key: obj[key] for key in ['video_id', 'title']} for obj in recommended_list]
+
+                data={
+                    'status':False,
+                    'vid_list':filtered_list
+                }
+                return data
+            else:
+                pass
+    except Exception as e:
+        print(e)
+
+
+        
 
 
 @app.route('/', methods = ['GET', 'POST'])
 def home():
     return render_template("signin.html")
+
+
 
 
 @app.route('/signup', methods = ['GET', 'POST'])
@@ -18,13 +52,15 @@ def signup():
 
 @app.route('/signin', methods = ['GET', 'POST'])
 def signin():
-    status, username = db.check_user()
+    status, email, username = db.check_user()
 
     data = {
         "username": username,
         "status": status
     }
-
+    if status:
+        session['username'] = username  # Store the username in session
+        session['email'] = email
     return json.dumps(data)
 
 
@@ -34,6 +70,20 @@ def register():
     status = db.insert_data()
     return json.dumps(status)
 
+
+@app.route('/home',methods=['GET','POST'])
+def display():
+    username = session.get('username')
+    email = session.get('email')
+    return render_template("content.html",username=username)    
+    # else:
+    #     return redirect(url_for('home'))  # Redirect to login if no user is logged in
+
+@app.route('/generate_list',methods=['GET','POST'])
+def get_recommendation():
+    data=check_liked_lables()
+    print(data)
+    return json.dumps({})
 
 if __name__ == '__main__':
     app.run(debug = True)

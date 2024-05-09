@@ -1,10 +1,10 @@
 import pymongo
-from flask import request
+from flask import request,jsonify
 
 client = pymongo.MongoClient('mongodb://127.0.0.1:27017/')
-userdb = client['userdb']
-users = userdb.customers
-
+userdb = client['bigdata']
+users = userdb.users
+api_key="AIzaSyBLCjxOSiwtMrb_wf5I7eV-szM3Gd4Uv9g"
 
 def insert_data():
 	if request.method == 'POST':
@@ -39,4 +39,4 @@ def check_user():
 		if user_data == None:
 			return False, ""
 		else:
-			return True, user_data["name"]
+			return True, user_data["email"],user_data["name"]

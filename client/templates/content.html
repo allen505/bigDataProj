@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Home page</title>
+  <style>
+    .top-left {
+      position: static;
+      top: 10px;
+      left: 10px;
+      background-color: lightblue;
+      border-radius: 10px;
+      padding: 20px;
+      width: 200px;
+    }
+
+    .top-right {
+      top: 10px;
+      right: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .user-info {
+      margin-left: 10px;
+    }
+
+    .user-icon {
+      width: 30px;
+      height: 30px;
+      background-color: #ccc;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+
+  <!-- Font Icon -->
+  <link rel="stylesheet"
+    href="{{ url_for('static', filename= 'fonts/material-icon/css/material-design-iconic-font.min.css') }}">
+
+  <!-- Main css -->
+  <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+
+</head>
+
+<body>
+  <div class="container" style="width: 100%;">
+    <div class="top-left">
+      Welcome Message
+    </div>
+    <div class="top-right">
+      <div class="user-icon">👤</div>
+      <div class="user-info">
+        <strong>{{username}}</strong>
+      </div>
+    </div>
+  </div>
+  <div class="recommendation" style="margin-top: 50px; width: 1200px;">
+    test text
+  </div>
+  <script src="{{ url_for('static', filename= 'vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename= 'js/index.js') }}"></script>
+  <script script type="text/javascript">
+    $.ajax({
+      type:'POST',
+      url: '/generate_list',
+      processData: false,
+      cache: false,
+      timeout: 800000,
+      contentType: false,
+      data:"",
+      success: function(response) {
+          var data = JSON.parse(response);
+          if (data['status'] == true){
+            console.log("Got the data")
+              $('.recommendation').append('<div class="text">Popular Videos</div>')
+              console.log(data['vid_list'])
+              for(let i=0;i<data['vid_list'].length;i++){
+                $(".recommendation").append(`<div class='labels' tag='${data['vid_list'][i]["video_id"]}'> ${data['vid_list'][i]['title']}`)
+              }
+            
+          } 
+          // else{
+          //     $(".error_message").text("Incorrect Email and Password.");
+          //     $(".error_message").show(0).delay(3000).hide(0);
+          //     window.location="/home"
+          // }
+      } 
+              
+    });
+  </script>
+
+</body>
+
+</html>

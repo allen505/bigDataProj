@@ -65,9 +65,8 @@
     <!-- JS -->
     <script src="{{ url_for('static', filename= 'vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename= 'js/main.js') }}"></script>
-
     <script type="text/javascript">
-        
+    
         function login(){
 
             if (($("#email").val() == "") || ($("#pass").val() == '')){
@@ -93,9 +92,15 @@
                         if (data['status'] == true){
                             $('#login_message').text("Welcome " + data['username'] +", Login Successfully.");
                             $('#login_message').show(0).delay(3000).hide(0);
+
+                            setTimeout(() => {
+                                window.location="/home";
+                            },3000);
+
                         } else{
                             $(".error_message").text("Incorrect Email and Password.");
                             $(".error_message").show(0).delay(3000).hide(0);
+                            window.location="/home"
                         }
                     } 
                 });
