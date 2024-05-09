@@ -9,13 +9,10 @@
 <body>
     <h1>Embedded YouTube Video</h1>
     <!-- Replace 'VIDEO_ID' with the actual ID of the YouTube video you want to embed -->
-    <iframe id="video-frame" width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+    <div id="video-frame"></iframe>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const videoId = urlParams.get('videoId');
-        const videoUrl = `http://www.youtube.com/embed/${videoId}?controls=0`;
-        document.getElementById('video-frame').src = videoUrl;
+    <script src="{{ url_for('static', filename= 'js/video.js') }}"></script>
+    <script type="text/javascript">
     </script>
 </body>
 </html>

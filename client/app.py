@@ -93,9 +93,9 @@ def get_recommendation():
     return json.dumps(data)
     # return render_template('content.html', data=data)
 
-@app.route('/play_video')
-def play_video():
-    return render_template('play_video.html')
+@app.route('/play_video/<videoId>')
+def play_video(videoId):
+    return render_template('play_video.html',videoId=videoId)
 
 
 if __name__ == '__main__':
