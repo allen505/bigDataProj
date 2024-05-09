@@ -90,10 +90,12 @@ def get_recommendation():
     data=check_liked_lables()
     print("DATA:",data)
     return json.dumps(data)
-@app.route('/play_video')
-def play_video():
-    return render_template('play_video.html')
 
+
+
+@app.route('/play_video/<videoId>')
+def play_video(videoId):
+    return render_template('play_video.html', videoId=videoId)
 
 if __name__ == '__main__':
     app.run(debug = True)
