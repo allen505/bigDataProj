@@ -163,7 +163,7 @@ def like_video(video_id):
 # ------------------------------------------------------------
 #  Updating current time
 # ------------------------------------------------------------
- 
+
 
 
 @app.route('/update_time', methods=['POST'])
@@ -210,14 +210,12 @@ def update_time():
 
 @app.route('/ana/mark_opened', methods = ['POST'])
 def mark_opened():
-    # print("Received /ana/mark_opened")
     VID_OPEN_TOPIC = 'VID_OPEN_TOPIC'
     user_email = session.get('email')
     req_data = request.get_json()
     video_id = req_data['video_id']
     curTime=datetime.datetime.now()
     users.update_one({'email': user_email}, {'$addToSet': {'watched_history': {'current_time': curTime, 'video_id':video_id}}})
-    
 
     if user_email and video_id:
         push_data = {'timestamp': curTime, 'video_id': video_id, 'email': user_email}
