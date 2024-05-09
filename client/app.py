@@ -51,7 +51,7 @@ def check_liked_lables():
                             "total_views": {"$sum": "$view_count"}
                         }},
                         {"$sort": {"total_views": -1}},
-                        {"$limit": 5}
+                        {"$limit": 20}
                     ])
                     vid_list = [doc["_id"] for doc in recommended_list]
                 else:
@@ -60,7 +60,7 @@ def check_liked_lables():
                 recommended_list = videos.aggregate([
                     {"$sortByCount": "$video_id"},
                     {"$sort": {"count": -1}},
-                    {"$limit": 5}
+                    {"$limit": 20}
                 ])
                 vid_list = [doc["_id"] for doc in recommended_list]
                 

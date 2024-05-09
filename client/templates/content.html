@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Home page</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -66,6 +66,20 @@
             margin: 50px auto;
             max-width: 1200px;
             text-align: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .text {
+            grid-column: span 5;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
         }
     </style>
 
@@ -81,7 +95,7 @@
 <body>
 <div class="container">
     <div class="top-left">
-        Big Data Proj
+        <h1>Big Data Project</h1>
     </div>
     <div class="top-right">
         <div class="user-icon">👤</div>
@@ -105,18 +119,13 @@
         data: "",
         success: function (response) {
             var data = JSON.parse(response);
-            console.log("Got the data", data);
             if (data['vid_list']) {
-                console.log("vid_list exists:", data['vid_list']);
                 $('.recommendation').append('<div class="text">Popular Videos</div>');
                 for (let i = 0; i < data['vid_list'].length; i++) {
                     let id = data['vid_list'][i];
                     let name = data['vid_name'][i];
-                    $(".recommendation").append(`<button class='video-button videos-btn' data-id='${id}'>${name} (${id})</button></br>`);
-                    $(".recommendation").append(`<div style='margin-bottom: 10px;'></div>`); // Add space between buttons
-
+                    $(".recommendation").append(`<button class='video-button videos-btn' data-id='${id}'>${name} (${id})</button>`);
                 }
-
                 $('.video-button').click(markVidOpen)
             } else {
                 console.log("vid_list does not exist or is undefined");
@@ -126,8 +135,6 @@
 
     function markVidOpen() {
         let videoId = $(this).attr('data-id');
-        console.log("markVidOpen for id = ", videoId);
-
         $.ajax({
             type: 'POST',
             url: '/ana/mark_opened',
