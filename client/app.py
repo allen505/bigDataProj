@@ -17,6 +17,7 @@ app.secret_key = 'your_very_secure_secret_key'  # You should generate a secure k
 users = db.users
 trending_videos = db.userdb.trending_videos
 videos = db.userdb.videos
+most_watched_segment = db.userdb.videos
 
 KAFKA_ENDPOINT = 'localhost:9093'
 
@@ -51,10 +52,11 @@ def check_liked_lables():
                             "total_views": {"$sum": "$view_count"}
                         }},
                         {"$sort": {"total_views": -1}},
-                        {"$limit": 5}
+                        {"$limit": 20}
                     ])
                     vid_list = [doc["_id"] for doc in recommended_list]
                 else:
+                    recommended_list = trending_videos.find({}, {'video_id': 1})
                     vid_list = [doc["video_id"] for doc in recommended_list]
                 # recommended_list = trending_videos.find({}, {'video_id': 1})
                 recommended_list = videos.aggregate([
@@ -139,7 +141,12 @@ def get_recommendation():
 def play_video(videoId):
     # length_seconds = get_video_length(videoId)
     # print("LENGTH:",length_seconds)
-    return render_template('play_video.html', videoId=videoId)
+    famous_segment = None
+    # Query the most_watched_segment collection to get the famous segment for the given videoId
+    result = most_watched_segment.find_one({"video_id": videoId})
+    if result:
+        famous_segment = result.get("famous_segment")
+    return render_template('play_video.html', videoId=videoId, famous_segment=famous_segment)
 
 
 # Route to handle liking or disliking a video
