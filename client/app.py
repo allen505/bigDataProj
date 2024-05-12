@@ -17,7 +17,7 @@ app.secret_key = 'your_very_secure_secret_key'  # You should generate a secure k
 users = db.users
 trending_videos = db.userdb.trending_videos
 videos = db.userdb.videos
-most_watched_segment = db.userdb.videos
+most_watched_segment=db.userdb.most_watched_segment
 
 KAFKA_ENDPOINT = 'localhost:9093'
 
@@ -62,7 +62,7 @@ def check_liked_lables():
                 recommended_list = videos.aggregate([
                     {"$sortByCount": "$video_id"},
                     {"$sort": {"count": -1}},
-                    {"$limit": 5}
+                    {"$limit": 20}
                 ])
                 vid_list = [doc["_id"] for doc in recommended_list]
                 
