@@ -1,16 +1,19 @@
 # BigData Project
 
-[Link to Project Report]()
+[Link to Project Report](assets/BigdataReport.pdf)
 
 # Result
 
-[]()
+### *Architecture Diagram*
+![](assets/architectureDiagram.png)
 
-[]()
+---
+### *Logs being generated to Kafka when a user clicks on a video*
+![](assets/OpenVidTopic.gif)
 
-
-
-
+---
+### *Logs being generated to Kafka when a user clicks on a video*
+![](assets/SkipTopic.gif)
 
 
 ## Running the cluster
